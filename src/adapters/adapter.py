@@ -1,12 +1,19 @@
 class InputAdapter:
-    """Base wrapper class for a data input"""
+    """Base adapter class that wraps an input source
 
-    def __init__(self, src=None, *args, **kwargs):
-        self.src = src
+    Handles the source's specifics and exposes the source's data.
+    """
+
+    def __init__(self):
+        self.src = None
         self.count = 0
 
+    def set_src(self, src):
+        """Set the adapter's source"""
+        pass
+
     def getlevel(self, pos):
-        """Return the `Level` container the information for the level at `pos`"""
+        """Return a `Level` container with the data for the level at `pos`"""
         pass
 
 
