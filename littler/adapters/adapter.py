@@ -5,7 +5,6 @@ class InputAdapter:
     """
 
     def __init__(self):
-        self.src = None
         self.count = 0
 
     def set_src(self, src):
