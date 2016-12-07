@@ -49,5 +49,5 @@ class GrawAdapter(InputAdapter):
             self._parse(src)
 
     def _parse(self, src):
-        data = pd.read_table(src, names=range(_NUM_COLS), skiprows=3, skipfooter=10)
+        data = pd.read_table(src, names=range(_NUM_COLS), skiprows=3, skipfooter=10, engine='python')
         self.count = data.shape[0]
