@@ -1,2 +1,2 @@
-from .adapter import InputAdapter
+from .adapter import Level
 from .grawadapter import GrawAdapter
