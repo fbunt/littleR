@@ -44,8 +44,10 @@ _ID = 15
 class GrawAdapter(InputAdapter):
     def __init__(self, src=None):
         super().__init__()
+        self.levels = []
         if src is not None:
             self._parse(src)
 
     def _parse(self, src):
-        pass
+        data = pd.read_table(src, names=range(_NUM_COLS), skiprows=3, skipfooter=10)
+        self.count = data.shape[0]
