@@ -1,8 +1,8 @@
 import pandas as pd
 import time
 
-from littler.io.adapters.adapter import InputAdapter
-from littler.io.level import Level
+from littler.input.adapters.adapter import InputAdapter
+from littler.input.level import Level
 
 _NUM_COLS = 16
 # Time (sec): seconds after start
