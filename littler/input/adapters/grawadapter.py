@@ -42,13 +42,12 @@ _ID = 15
 
 
 class GrawAdapter(InputAdapter):
-    def __init__(self, src=None, src_start_datetime=None):
+    def __init__(self, src, src_start_datetime=None):
         super().__init__()
         self.levels = []
         # TODO: use epoch?
         self._start_date = src_start_datetime or time.gmtime(0)
-        if src is not None:
-            self._parse(src)
+        self._parse(src)
 
     def getlevel(self, pos):
         return self.levels[pos]
