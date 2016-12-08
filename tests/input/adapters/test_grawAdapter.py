@@ -1,3 +1,4 @@
+import datetime
 from unittest import TestCase
 
 from littler.input.adapters import GrawAdapter
@@ -11,7 +12,7 @@ class TestGrawAdapter(TestCase):
 
     def setUp(self):
         with open('../../data/GrawProfile_7_14_SLU.txt', encoding='latin-1') as fd:
-            self.adapter = GrawAdapter(fd)
+            self.adapter = GrawAdapter(fd, datetime.datetime.today())
 
     def test_count(self):
         self.assertEqual(self.adapter.count, test_file_count, 'adapter.count must equal data\'s count')

@@ -1,5 +1,5 @@
+import datetime
 import pandas as pd
-import time
 
 from littler.input.adapters.adapter import InputAdapter
 from littler.input.level import Level
@@ -42,18 +42,23 @@ _ID = 15
 
 
 class GrawAdapter(InputAdapter):
-    def __init__(self, src, src_start_datetime=None):
+    def __init__(self, src, src_start_datetime):
+        """
+        :param src: The data source file or file name
+        :param src_start_datetime: datetime.datetime The start data and time of the measurements
+        """
         super().__init__()
         self.levels = []
-        # TODO: use epoch?
-        self._start_date = src_start_datetime or time.gmtime(0)
+        self._start_date = src_start_datetime
         self._parse(src)
 
     def getlevel(self, pos):
         return self.levels[pos]
 
     def _parse(self, src):
-        data = pd.read_table(src, names=range(_NUM_COLS), skiprows=3, skipfooter=10, engine='python')
+        converters = {_ITIME: int}
+        data = pd.read_table(src, names=range(_NUM_COLS), skiprows=3, skipfooter=10, converters=converters,
+                             engine='python')
         self.count = data.shape[0]
         for i in range(self.count):
             level = Level()
