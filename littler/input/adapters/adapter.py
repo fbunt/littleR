@@ -7,10 +7,6 @@ class InputAdapter:
     def __init__(self):
         self.count = 0
 
-    def set_src(self, src):
-        """Set the adapter's source"""
-        pass
-
     def getlevel(self, pos):
         """Return a `Level` container with the data for the level at `pos`"""
         pass
