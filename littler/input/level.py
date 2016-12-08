@@ -1,3 +1,6 @@
+_DEFAULT_FLOAT = -888888.0
+
+
 class Level:
     """Container class for passing LITTLE_R level data"""
 
@@ -16,21 +19,21 @@ class Level:
         self.date = '19700101000000'
         # Value and quality indicator pairs
         # TODO: determine what SLP stands for...
-        self.slp = (-888888.0, 0)
+        self.slp = (_DEFAULT_FLOAT, 0)
         # Surface pressure
-        self.sfc_pres = (-888888.0, 0)
+        self.sfc_pres = (_DEFAULT_FLOAT, 0)
         # Precipitable water
-        self.perfip_h2o = (-888888.0, 0)
+        self.perfip_h2o = (_DEFAULT_FLOAT, 0)
 
         # RECORD VALUES
         # Value and quality indicator pairs
-        self.pres = (-888888.0, 0)  # Pa
-        self.height = (-888888.0, 0)  # m
-        self.temp = (-888888.0, 0)  # K
-        self.dewpoint = (-888888.0, 0)  # K
-        self.windspd = (-888888.0, 0)  # m/s
-        self.winddir = (-888888.0, 0)  # deg
-        self.windu = (-888888.0, 0)  # m/s
-        self.windv = (-888888.0, 0)  # m/s
-        self.rh = (-888888.0, 0)  # %
-        self.thickness = (-888888.0, 0)   # m
+        self.pres = (_DEFAULT_FLOAT, 0)  # Pa
+        self.height = (_DEFAULT_FLOAT, 0)  # m
+        self.temp = (_DEFAULT_FLOAT, 0)  # K
+        self.dewpoint = (_DEFAULT_FLOAT, 0)  # K
+        self.windspd = (_DEFAULT_FLOAT, 0)  # m/s
+        self.winddir = (_DEFAULT_FLOAT, 0)  # deg
+        self.windu = (_DEFAULT_FLOAT, 0)  # m/s
+        self.windv = (_DEFAULT_FLOAT, 0)  # m/s
+        self.rh = (_DEFAULT_FLOAT, 0)  # %
+        self.thickness = (_DEFAULT_FLOAT, 0)   # m
