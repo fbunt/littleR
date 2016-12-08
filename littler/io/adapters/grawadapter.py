@@ -1,8 +1,8 @@
 import pandas as pd
 import time
 
-from .adapter import InputAdapter
-from io.level import Level
+from littler.io.adapters.adapter import InputAdapter
+from littler.io.level import Level
 
 _NUM_COLS = 16
 # Time (sec): seconds after start
@@ -52,3 +52,38 @@ class GrawAdapter(InputAdapter):
     def _parse(self, src):
         data = pd.read_table(src, names=range(_NUM_COLS), skiprows=3, skipfooter=10, engine='python')
         self.count = data.shape[0]
+        for i in range(self.count):
+            level = Level()
+            lv = data.iloc[i]
+            level.lat = lv.loc[_ILAT]
+            level.lon = lv.loc[_ILON]
+            # TODO: implement id, name
+            # TODO: confirm this is correct
+            level.platform = 'FM-37 TEMP DROP'
+            level.alt = lv.loc[_ILAT]
+            # TODO: implement seq num
+            level.date = _get_date_str(self._start_date, lv.loc[_ITIME])
+            # TODO: implement SLP
+
+            level.pres = (lv.loc[_IPRES], 0)
+            level.height = (_convert_pres(lv.loc[_IALT]), 0)
+            level.temp = (_convert_temp(lv.loc[_ITEMP]), 0)
+            level.dewpoint = (_convert_temp(lv.loc[_IDEW]), 0)
+            level.windspd = (lv.loc[_IWS], 0)
+            level.winddir = (lv.loc[_IWD], 0)
+            # TODO: implement wind u/v
+            level.rh = (lv.loc[_IRH], 0)
+            self.levels.append(level)
+
+
+def _get_date_str(date, secs):
+    # TODO: implement
+    return ''
+
+
+def _convert_pres(p_mb):
+    return p_mb * 100.0
+
+
+def _convert_temp(t_c):
+    return t_c + 273.15

@@ -1,7 +1,8 @@
 from unittest import TestCase
 
-from io.adapters import GrawAdapter
-from io.level import Level
+from littler.io.adapters import GrawAdapter
+from littler.io.level import Level
+
 
 test_file_count = 4040
 

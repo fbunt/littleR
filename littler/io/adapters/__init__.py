@@ -1,2 +1,1 @@
-from io.level import Level
-from .grawadapter import GrawAdapter
+from littler.io.adapters.grawadapter import GrawAdapter
