@@ -42,12 +42,16 @@ _ID = 15
 
 
 class GrawAdapter(InputAdapter):
-    def __init__(self, src=None, src_start_date=None):
+    def __init__(self, src=None, src_start_datetime=None):
         super().__init__()
         self.levels = []
-        self._start_date = src_start_date or time.gmtime(0)
+        # TODO: use epoch?
+        self._start_date = src_start_datetime or time.gmtime(0)
         if src is not None:
             self._parse(src)
+
+    def getlevel(self, pos):
+        return self.levels[pos]
 
     def _parse(self, src):
         data = pd.read_table(src, names=range(_NUM_COLS), skiprows=3, skipfooter=10, engine='python')
