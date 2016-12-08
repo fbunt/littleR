@@ -1,8 +1,7 @@
 from unittest import TestCase
 
-import os
-
-from littler.adapters import GrawAdapter, Level
+from io.adapters import GrawAdapter
+from io.level import Level
 
 test_file_count = 4040
 
@@ -10,7 +9,7 @@ test_file_count = 4040
 class TestGrawAdapter(TestCase):
 
     def setUp(self):
-        with open('../data/GrawProfile_7_14_SLU.txt', encoding='latin-1') as fd:
+        with open('../../data/GrawProfile_7_14_SLU.txt', encoding='latin-1') as fd:
             self.adapter = GrawAdapter(fd)
 
     def test_count(self):

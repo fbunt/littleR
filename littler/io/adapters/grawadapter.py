@@ -1,8 +1,8 @@
-import numpy as np
 import pandas as pd
+import time
 
-from .adapter import InputAdapter, Level
-
+from .adapter import InputAdapter
+from io.level import Level
 
 _NUM_COLS = 16
 # Time (sec): seconds after start
@@ -30,7 +30,7 @@ _IGPOT = 9
 _IDEW = 10
 # Virtual Temperature (C)
 _IVTEMP = 11
-# Elevation (degrees WTF?)
+# Elevation (degrees)
 # TODO: figure out what is going on with units
 _IELE = 12
 # Azimuth (degrees)
@@ -42,9 +42,10 @@ _ID = 15
 
 
 class GrawAdapter(InputAdapter):
-    def __init__(self, src=None):
+    def __init__(self, src=None, src_start_date=None):
         super().__init__()
         self.levels = []
+        self._start_date = src_start_date or time.gmtime(0)
         if src is not None:
             self._parse(src)
 
