@@ -85,8 +85,9 @@ class GrawAdapter(InputAdapter):
 
 
 def _get_date_str(date, secs):
-    # TODO: implement
-    return ''
+    t = date + datetime.timedelta(seconds=secs)
+    # YYYYMMDDhhmmss
+    return t.strftime('%Y%M%d%H%m%S')
 
 
 def _convert_pres(p_mb):
