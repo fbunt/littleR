@@ -10,10 +10,11 @@ test_file_count = 4040
 
 class TestGrawAdapter(TestCase):
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
         with open('../../data/GrawProfile_7_14_SLU.txt', encoding='latin-1') as fd:
-            self.now = datetime.datetime.today()
-            self.adapter = GrawAdapter(fd, self.now)
+            cls.now = datetime.datetime.today()
+            cls.adapter = GrawAdapter(fd, cls.now)
 
     def test_count(self):
         self.assertEqual(self.adapter.count, test_file_count, 'adapter.count must equal data\'s count')
