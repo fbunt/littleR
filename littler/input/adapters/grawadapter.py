@@ -68,7 +68,7 @@ class GrawAdapter(InputAdapter):
             # TODO: implement id, name
             # TODO: confirm this is correct
             level.platform = 'FM-37 TEMP DROP'
-            level.alt = lv.loc[_ILAT]
+            level.alt = lv.loc[_IALT]
             # TODO: implement seq num
             level.date = _get_date_str(self._start_date, lv.loc[_ITIME])
             # TODO: implement SLP
