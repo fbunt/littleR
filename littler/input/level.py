@@ -5,7 +5,6 @@ class Level:
     """Container class for passing LITTLE_R level data"""
 
     def __init__(self):
-        # TODO: pull out default (-888888.0) value
         # HEADER VALUES
         self.lat = 0.0
         self.lon = 0.0
@@ -18,7 +17,8 @@ class Level:
         # YYYY-MM-DD-hh:mm:ss
         self.date = '19700101000000'
         # Value and quality indicator pairs
-        # TODO: determine what SLP stands for...
+        # Surface level pressure?
+        # TODO: review necessity
         self.slp = (_DEFAULT_FLOAT, 0)
         # Surface pressure
         self.sfc_pres = (_DEFAULT_FLOAT, 0)

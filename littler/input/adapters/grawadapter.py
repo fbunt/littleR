@@ -44,7 +44,7 @@ _ID = 15
 class GrawAdapter(InputAdapter):
     def __init__(self, src, src_start_datetime):
         """
-        :param src: The data source file or file name
+        :param src: The data source file or file name. Ownership is NOT assumed for open file objects.
         :param src_start_datetime: datetime.datetime The start data and time of the measurements
         """
         super().__init__()
@@ -66,8 +66,7 @@ class GrawAdapter(InputAdapter):
             level.lat = lv.loc[_ILAT]
             level.lon = lv.loc[_ILON]
             # TODO: implement id, name
-            # TODO: confirm this is correct
-            level.platform = 'FM-37 TEMP DROP'
+            level.platform = 'FM-38 TEMP MOBIL'
             level.alt = lv.loc[_IALT]
             # TODO: implement seq num
             level.date = _get_date_str(self._start_date, lv.loc[_ITIME])
