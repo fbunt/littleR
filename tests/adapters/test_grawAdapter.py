@@ -1,9 +1,8 @@
 import datetime
 from unittest import TestCase
 
-from littler.input.adapters import GrawAdapter
-from littler.input.level import Level
-
+from level import Level
+from littler.adapters import GrawAdapter
 
 test_file_count = 4040
 
@@ -12,7 +11,7 @@ class TestGrawAdapter(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        with open('../../data/GrawProfile_7_14_SLU.txt', encoding='latin-1') as fd:
+        with open('../data/GrawProfile_7_14_SLU.txt', encoding='latin-1') as fd:
             cls.now = datetime.datetime.today()
             cls.adapter = GrawAdapter(fd, cls.now)
 
