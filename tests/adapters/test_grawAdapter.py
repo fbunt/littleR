@@ -1,7 +1,7 @@
 import datetime
 from unittest import TestCase
 
-from level import Level
+from littler.level import Level
 from littler.adapters import GrawAdapter
 
 test_file_count = 4040
