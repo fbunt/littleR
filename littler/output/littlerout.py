@@ -1,10 +1,22 @@
 class LittleROut:
-    pass
+    def __init_(self):
+        pass
+
+    def add_report(self, header, levels):
+        pass
 
 
 class _Report:
-    pass
+    def __init__(self):
+        pass
+
+    def add_record(self, levels):
+        pass
 
 
 class _Record:
-    pass
+    def __init__(self):
+        pass
+
+    def add_level(self, level):
+        pass
