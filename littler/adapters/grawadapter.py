@@ -73,8 +73,8 @@ class GrawAdapter(InputAdapter):
             level.date = _get_date_str(self._start_date, lv.loc[_ITIME])
             # TODO: implement SLP
 
-            level.pres = (lv.loc[_IPRES], 0)
-            level.height = (_convert_pres(lv.loc[_IALT]), 0)
+            level.pres = (_convert_pres(lv.loc[_IPRES]), 0)
+            level.height = (lv.loc[_IALT], 0)
             level.temp = (_convert_temp(lv.loc[_ITEMP]), 0)
             level.dewpoint = (_convert_temp(lv.loc[_IDEW]), 0)
             level.windspd = (lv.loc[_IWS], 0)
