@@ -35,8 +35,16 @@ _RECORD_FMT_STR = '{:13.5F}{:7d}'*10
 
 class _Record:
     def __init__(self, level):
-        self.level = level
+        self.lv = level
 
     def __str__(self):
-        # TODO: implement
-        return ''
+        return _RECORD_FMT_STR.format(*self.lv.pres,
+                                     *self.lv.height,
+                                     *self.lv.temp,
+                                     *self.lv.dewpoint,
+                                     *self.lv.windspd,
+                                     *self.lv.winddir,
+                                     *self.lv.windu,
+                                     *self.lv.windv,
+                                     *self.lv.rh,
+                                     *self.lv.thickness)
