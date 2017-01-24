@@ -12,32 +12,44 @@ class Level:
         self.id = ''
         self.name = ''
         self.platform = 'FM-35 TEMP'
+        self.source = ''
         self.alt = 0.0
         self.seq_num = 0
+        self.is_sounding = False
         self.bogus = False
         # YYYY-MM-DD-hh:mm:ss
         self.date = '19700101000000'
         # Value and quality indicator pairs
         # Surface level pressure?
         # TODO: review necessity
-        self.slp = (_DEFAULT_FLOAT, 0)
+        self.slp = (DEFAULT_FLOAT, 0)
         # Surface pressure
-        self.sfc_pres = (_DEFAULT_FLOAT, 0)
+        self.sfc_pres = (DEFAULT_FLOAT, 0)
         # Precipitable water
-        self.perfip_h2o = (_DEFAULT_FLOAT, 0)
+        self.perfip_h2o = (DEFAULT_FLOAT, 0)
 
         # Number of record fields below that are utilized
         self.valid_fields = 0
 
         # RECORD VALUES
         # Value and quality indicator pairs
-        self.pres = (_DEFAULT_FLOAT, 0)  # Pa
-        self.height = (_DEFAULT_FLOAT, 0)  # m
-        self.temp = (_DEFAULT_FLOAT, 0)  # K
-        self.dewpoint = (_DEFAULT_FLOAT, 0)  # K
-        self.windspd = (_DEFAULT_FLOAT, 0)  # m/s
-        self.winddir = (_DEFAULT_FLOAT, 0)  # deg
-        self.windu = (_DEFAULT_FLOAT, 0)  # m/s
-        self.windv = (_DEFAULT_FLOAT, 0)  # m/s
-        self.rh = (_DEFAULT_FLOAT, 0)  # %
-        self.thickness = (_DEFAULT_FLOAT, 0)   # m
+        # Pa
+        self.pres = (DEFAULT_FLOAT, 0)
+        # m
+        self.height = (DEFAULT_FLOAT, 0)
+        # K
+        self.temp = (DEFAULT_FLOAT, 0)
+        # K
+        self.dewpoint = (DEFAULT_FLOAT, 0)
+        # m/s
+        self.windspd = (DEFAULT_FLOAT, 0)
+        # deg
+        self.winddir = (DEFAULT_FLOAT, 0)
+        # m/s
+        self.windu = (DEFAULT_FLOAT, 0)
+        # m/s
+        self.windv = (DEFAULT_FLOAT, 0)
+        # %
+        self.rh = (DEFAULT_FLOAT, 0)
+        # m
+        self.thickness = (DEFAULT_FLOAT, 0)

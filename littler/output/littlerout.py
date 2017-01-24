@@ -1,3 +1,6 @@
+from littler.level import Level, DEFAULT_FLOAT, UNUSED_INT
+
+
 class LittleROut:
     def __init_(self, dst_filename):
         self.reports = []
@@ -28,6 +31,64 @@ class _Report:
     def __str__(self):
         # TODO: implement
         return ''
+
+
+_hf20str = '{:>20.5F}'
+_ha40str = '{:<40}'
+_ha20str = '{:>20}'
+_histr = '{:>10d}'
+_hlstr = '{:>10}'
+_hfpairstr = '{:>13.5F}{:>7d}'
+# Format string for a LittleR Report header
+# NOTE: The header section at http://www2.mmm.ucar.edu/wrf/users/wrfda/OnlineTutorial/Help/littler.html
+#       has one more value/QC pair (Precipitable water) at the end of the header def but leaves it out in
+#       the example. It is left out here.
+_HEADER_FMT_STR = (
+    # Lat, Lon
+    _hf20str*2
+    # ID, Name, Platform, Source
+    + _ha40str*4
+    # Elevation
+    + _hf20str
+    # Valid Fields, Num Errors, Num Warnings, Sequence Num, Num duplicates
+    + _histr*5
+    # Is Sounding?, Is Bogus?, Discard?
+    + _hlstr*3
+    # Unix Time, Julian Day
+    + _histr*2
+    # Date
+    + _ha20str
+    # SLP, Ref Press, Ground Temp, SST, SFC Press, Precip, Daily Max, Daily Min, Night Min,
+    # 3hr Press Change, 24hr Press Change, Cloud Cover, Ceiling
+    + _hfpairstr*13
+)
+
+
+class _Header:
+    def __init__(self, level, valid_fields):
+        self.lv = level
+        self.valid_fields = valid_fields
+
+    def __str__(self):
+        lv = self.lv
+        # See above for fields
+        return _HEADER_FMT_STR.format(
+            lv.lat, lv.lon,
+            lv.id, lv.name, lv.platform, lv.source,
+            lv.alt,
+            self.valid_fields, UNUSED_INT, UNUSED_INT, lv.seq_num, UNUSED_INT,
+            _b_to_str(lv.is_sounding), _b_to_str(lv.bogus), _b_to_str(False),
+            UNUSED_INT, UNUSED_INT,
+            lv.date,
+            *([DEFAULT_FLOAT, 0]*13)
+        )
+
+
+def _b_to_str(b):
+    if b:
+        return 'T'
+    else:
+        return 'F'
 
 
 _RECORD_FMT_STR = '{:13.5F}{:7d}'*10
