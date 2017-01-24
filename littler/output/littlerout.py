@@ -16,20 +16,29 @@ class LittleROut:
         self.reports[-1].add_record(level)
 
 
+_END_RECORD_VALUE = -777777.0
+
+
 class _Report:
-    def __init__(self, header):
-        self.header = header
+    def __init__(self):
         self.records = []
+        # Ending sentinel level
+        lv = Level()
+        lv.pres = (_END_RECORD_VALUE, 0)
+        lv.height = (_END_RECORD_VALUE, 0)
+        self.ending_rec = _Record(lv)
 
     def add_record(self, level):
         self.records.append(_Record(level))
 
     def add_records(self, levels):
         for lv in levels:
-            self.records.append(_Record(lv))
+            self.add_record(lv)
 
     def __str__(self):
         # TODO: implement
+        # TODO: add tail
+        header = _Header(self.records[0].lv, len(self.records)*self.records[0].lv.valid_fields)
         return ''
 
 
