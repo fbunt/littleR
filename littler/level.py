@@ -1,4 +1,5 @@
-_DEFAULT_FLOAT = -888888.0
+DEFAULT_FLOAT = -888888.0
+UNUSED_INT = -888888
 
 
 class Level:
@@ -24,6 +25,9 @@ class Level:
         self.sfc_pres = (_DEFAULT_FLOAT, 0)
         # Precipitable water
         self.perfip_h2o = (_DEFAULT_FLOAT, 0)
+
+        # Number of record fields below that are utilized
+        self.valid_fields = 0
 
         # RECORD VALUES
         # Value and quality indicator pairs

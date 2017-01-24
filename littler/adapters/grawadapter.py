@@ -64,15 +64,20 @@ class GrawAdapter(InputAdapter):
         for i in range(self.count):
             level = Level()
             lv = data.iloc[i]
+            # Header
             level.lat = lv.loc[_ILAT]
             level.lon = lv.loc[_ILON]
             # TODO: implement id, name
             level.platform = 'FM-38 TEMP MOBIL'
+            # TODO: implement source
             level.alt = lv.loc[_IALT]
             # TODO: implement seq num
+            level.is_sounding = True
+            level.bogus = False
             level.date = _get_date_str(self._start_date, lv.loc[_ITIME])
             # TODO: implement SLP
 
+            # Fields
             level.pres = (_convert_pres(lv.loc[_IPRES]), 0)
             level.height = (lv.loc[_IALT], 0)
             level.temp = (_convert_temp(lv.loc[_ITEMP]), 0)
@@ -80,7 +85,11 @@ class GrawAdapter(InputAdapter):
             level.windspd = (lv.loc[_IWS], 0)
             level.winddir = (lv.loc[_IWD], 0)
             # TODO: implement wind u/v
+            level.windu = (0, 0)
+            level.windv = (0, 0)
             level.rh = (lv.loc[_IRH], 0)
+
+            level.valid_fields = 9
             self.levels.append(level)
 
 

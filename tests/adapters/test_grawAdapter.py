@@ -28,3 +28,6 @@ class TestGrawAdapter(TestCase):
         test_str = self.now.strftime('%Y%M%d%H%m%S')
         self.assertEqual(self.adapter.getlevel(0).date, test_str, 'Data string must match expected format')
 
+    def test_valid_fields(self):
+        self.assertEqual(self.adapter.getlevel(0).valid_fields, 9, 'Valid fields must be 9')
+
