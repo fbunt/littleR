@@ -91,6 +91,8 @@ def _b_to_str(b):
         return 'F'
 
 
+# Format string for a LittleR level Record.
+# Fields: Press, Height, Temp, Dew Point, Wind Spd, Wind Dir, Wind U, Wind V, Rel. Humidity, Thickness
 _RECORD_FMT_STR = '{:13.5F}{:7d}'*10
 
 
@@ -99,13 +101,14 @@ class _Record:
         self.lv = level
 
     def __str__(self):
-        return _RECORD_FMT_STR.format(*self.lv.pres,
-                                     *self.lv.height,
-                                     *self.lv.temp,
-                                     *self.lv.dewpoint,
-                                     *self.lv.windspd,
-                                     *self.lv.winddir,
-                                     *self.lv.windu,
-                                     *self.lv.windv,
-                                     *self.lv.rh,
-                                     *self.lv.thickness)
+        lv = self.lv
+        return _RECORD_FMT_STR.format(*lv.pres,
+                                      *lv.height,
+                                      *lv.temp,
+                                      *lv.dewpoint,
+                                      *lv.windspd,
+                                      *lv.winddir,
+                                      *lv.windu,
+                                      *lv.windv,
+                                      *lv.rh,
+                                      *lv.thickness)

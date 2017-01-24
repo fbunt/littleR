@@ -7,11 +7,13 @@ from littler.level import Level, DEFAULT_FLOAT
 class TestLittleROut(TestCase):
 
     def test_recordStr(self):
+        # Test default
         lv = Level()
         rec = _Record(lv)
         expected_str = '-888888.00000      0-888888.00000      0-888888.00000      0-888888.00000      0-888888.00000      0-888888.00000      0-888888.00000      0-888888.00000      0-888888.00000      0-888888.00000      0'
         self.assertEqual(str(rec), expected_str, "Default Record str must match expected")
 
+        # Test with specific values
         lv = Level()
         lv.pres = (83500.00000, 0)
         lv.temp = (264.44998, 0)
