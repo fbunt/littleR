@@ -1,5 +1,8 @@
 from littler.level import Level, DEFAULT_FLOAT, UNUSED_INT
 
+# The contents of this module are implemented using the documentation found at
+# http://www2.mmm.ucar.edu/wrf/users/wrfda/OnlineTutorial/Help/littler.html
+
 
 class LittleROut:
     def __init_(self, dst_filename):
@@ -69,8 +72,8 @@ _histr = '{:>10d}'
 _hlstr = '{:>10}'
 _hfpairstr = '{:>13.5F}{:>7d}'
 # Format string for a LittleR Report header
-# NOTE: The header section at http://www2.mmm.ucar.edu/wrf/users/wrfda/OnlineTutorial/Help/littler.html
-#       has one more value/QC pair (Precipitable water) at the end of the header def but leaves it out in
+# NOTE: The header section of the documentation site has one more value/QC pair
+#       (Precipitable water) at the end of the header def but leaves it out in
 #       the example. It is left out here.
 _HEADER_FMT_STR = (
     # Lat, Lon
