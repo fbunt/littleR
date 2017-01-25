@@ -17,9 +17,24 @@ class LittleROut:
 
 
 _END_RECORD_VALUE = -777777.0
+# Format string for the tail line of a Report.
+# Note: the documentation on the site states that the first integer is the "number of valid
+#       fields for the observation", but the actual value seems to be the number of valid
+#       records in the report as seen in MIDAS2LITTLER.
+# Number of valid fields (Number of levels), Errors, Warnings
+_TAIL_FMT_STR = '{:>7d}'*3
 
 
 class _Report:
+    """
+    Report Structure:
+        * Header line
+        * Record line(s)
+             ...
+        * Ending record line (sentinel values)
+        * Tail integers line (Valid "Fields"(records)
+    """
+
     def __init__(self):
         self.records = []
         # Ending sentinel level
@@ -36,10 +51,15 @@ class _Report:
             self.add_record(lv)
 
     def __str__(self):
-        # TODO: implement
-        # TODO: add tail
         header = _Header(self.records[0].lv, len(self.records)*self.records[0].lv.valid_fields)
-        return ''
+        tail = _TAIL_FMT_STR.format(len(self.records), 0, 0)
+        out = [str(header)]
+        out.extend([str(r) for r in self.records])
+        out.append(str(self.ending_rec))
+        out.append(tail)
+        out = '\n'.join(out)
+        out += '\n'
+        return out
 
 
 _hf20str = '{:>20.5F}'
