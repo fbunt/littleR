@@ -5,18 +5,29 @@ from littler.level import Level, DEFAULT_FLOAT, DEFAULT_INT
 
 
 class LittleROut:
-    def __init_(self, dst_filename):
+    def __init__(self, dst_file):
         self.reports = []
-        self.out = open(dst_filename, 'w', encoding='ascii')
+        self.out = dst_file
 
-    def start_new_report(self, header, levels=None):
-        r = _Report(header)
+    def start_new_report(self, levels=None):
+        r = _Report()
         if levels is not None:
             r.add_records(levels)
         self.reports.append(r)
 
     def add_level(self, level):
         self.reports[-1].add_record(level)
+
+    def add_levels(self, levels):
+        for lv in levels:
+            self.add_level(lv)
+
+    def write_contents(self):
+        for rep in self.reports:
+            self.out.write(str(rep))
+
+    def close(self):
+        self.out.close()
 
 
 _END_RECORD_VALUE = -777777.0

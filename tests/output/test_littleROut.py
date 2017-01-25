@@ -1,10 +1,84 @@
 from unittest import TestCase
+from io import StringIO
 
-from littler.output.littlerout import _Record, _Header, _Report
+from littler.output.littlerout import LittleROut, _Record, _Header, _Report
 from littler.level import Level, DEFAULT_FLOAT
 
 
+HEADER_VALS = [
+    [
+        39.78000, -104.86000, '72469', 'DENVER/STAPLETON INT., CO. / U.S.A.',
+        'FM-35 TEMP', 'GTS (ROHK) UKUS09 KWBC 051200 RRA', 1626.00000, 890,
+        True, False, '20080205120000', -888888.0, -888888.0
+     ],
+    [
+        -71.86300, -125.59700, -7777, 'Platform Id >>> 71656', 'FM-18 BUOY',
+        'GTS (ROHK) SSVX07 LFVW 051100', 0.00000, 6, -888888, 564,
+        False, False, '20080205110000', 97940.0, 97940.0
+     ]
+]
+
+# Taken from http://www2.mmm.ucar.edu/wrf/users/wrfda/OnlineTutorial/Help/littler.html
+LEVELS = [
+    [
+        [83500.0, -888888.0, 264.44998, 263.35001, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0],
+        [72100.0, -888888.0, 257.85001, 256.14999, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0],
+        [59100.0, -888888.0, 252.45000, 250.34999, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0],
+        [46600.0, -888888.0, 241.84999, 239.34999, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0],
+        [40000.0, -888888.0, 232.84999, 229.75000, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0],
+        [37200.0, -888888.0, 229.84999, 223.84999, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0],
+        [33900.0, -888888.0, 228.04999, 214.04999, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0],
+        [25400.0, -888888.0, 226.45000, 202.45000, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0],
+        [23300.0, -888888.0, 229.45000, 201.45000, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0],
+        [14100.0, -888888.0, 220.64999, 195.64999, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0],
+        [10000.0, -888888.0, 218.64999, 194.64999, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0]
+    ],
+    [
+
+    ]
+]
+
+
 class TestLittleROut(TestCase):
+
+    def test_littleROut_start_new_report(self):
+        out = LittleROut(StringIO())
+
+        out.start_new_report()
+        out.start_new_report([_vals_to_level(HEADER_VALS[0], lv) for lv in LEVELS[0]])
+        out.start_new_report()
+        out.close()
+
+        self.assertEqual(len(out.reports), 3)
+        self.assertEqual(len(out.reports[0].records), 0)
+        self.assertEqual(len(out.reports[1].records), len(LEVELS[0]))
+        self.assertEqual(len(out.reports[2].records), 0)
+
+    def test_littleROut_add_level_error(self):
+        # Make sure that LittleROut fails if a report hasn't been started
+        out = LittleROut(StringIO())
+
+        self.assertRaises(IndexError, out.add_level, Level())
+
+        out.start_new_report()
+        try:
+            out.add_level(Level())
+        except IndexError:
+            self.fail('LittleROut.add_level raised an unexpected error.')
+
+    def test_littleROut_add_level(self):
+        # testlv1 = Level()
+        # testlv1.alt = 0
+        # testlv2 = Level()
+        # testlv2.alt = 1
+        # out = LittleROut(StringIO())
+        #
+        # out.start_new_report()
+        # out.add_level(testlv1)
+        # out.start_new_report()
+        # out.add_level(testlv2)
+        pass
+        # self.assertNotEqual(out.reports[0].records[0].lv, out.reports[1].records[0].lv)
 
     def test_recordStr(self):
         # Test default
@@ -25,7 +99,7 @@ class TestLittleROut(TestCase):
 
     def test_headerStr(self):
         lv = Level()
-        _set_header_vals(lv)
+        _set_header_vals(HEADER_VALS[0], lv)
         lv.valid_fields = 1
         header = _Header(lv, lv.valid_fields)
 
@@ -33,21 +107,7 @@ class TestLittleROut(TestCase):
         self.assertEqual(str(header), expected_str)
 
     def test_reportStr(self):
-        # Taken from http://www2.mmm.ucar.edu/wrf/users/wrfda/OnlineTutorial/Help/littler.html
-        levels = [
-            [83500.0, -888888.0, 264.44998, 263.35001, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0],
-            [72100.0, -888888.0, 257.85001, 256.14999, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0],
-            [59100.0, -888888.0, 252.45000, 250.34999, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0],
-            [46600.0, -888888.0, 241.84999, 239.34999, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0],
-            [40000.0, -888888.0, 232.84999, 229.75000, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0],
-            [37200.0, -888888.0, 229.84999, 223.84999, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0],
-            [33900.0, -888888.0, 228.04999, 214.04999, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0],
-            [25400.0, -888888.0, 226.45000, 202.45000, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0],
-            [23300.0, -888888.0, 229.45000, 201.45000, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0],
-            [14100.0, -888888.0, 220.64999, 195.64999, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0],
-            [10000.0, -888888.0, 218.64999, 194.64999, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0]
-        ]
-        levels = [_vals_to_level(lv) for lv in levels]
+        levels = [_vals_to_level(HEADER_VALS[0], lv) for lv in LEVELS[0]]
         rep = _Report()
         rep.add_records(levels)
 
@@ -56,9 +116,9 @@ class TestLittleROut(TestCase):
         self.assertEqual(str(rep), expected_str, 'Report str must match expected')
 
 
-def _vals_to_level(vals):
+def _vals_to_level(hvals, vals):
     lv = Level()
-    _set_header_vals(lv)
+    _set_header_vals(hvals, lv)
     lv.valid_fields = len(vals) - vals.count(DEFAULT_FLOAT)
     lv.pres = (vals[0], 0)
     lv.height = (vals[1], 0)
@@ -73,15 +133,17 @@ def _vals_to_level(vals):
     return lv
 
 
-def _set_header_vals(lv):
-    lv.lat = 39.78000
-    lv.lon = -104.86000
-    lv.id = '72469'
-    lv.name = 'DENVER/STAPLETON INT., CO. / U.S.A.'
-    lv.platform = 'FM-35 TEMP'
-    lv.source = 'GTS (ROHK) UKUS09 KWBC 051200 RRA'
-    lv.alt = 1626.00000
-    lv.seq_num = 890
-    lv.is_sounding = True
-    lv.bogus = False
-    lv.date = '20080205120000'
+def _set_header_vals(hvals, lv):
+    lv.lat = hvals[0]
+    lv.lon = hvals[1]
+    lv.id = hvals[2]
+    lv.name = hvals[3]
+    lv.platform = hvals[4]
+    lv.source = hvals[5]
+    lv.alt = hvals[6]
+    lv.seq_num = hvals[7]
+    lv.is_sounding = hvals[8]
+    lv.bogus = hvals[9]
+    lv.date = hvals[10]
+    lv.slp = hvals[11]
+    lv.sfc_pres = hvals[12]
