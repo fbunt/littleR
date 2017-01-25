@@ -1,4 +1,4 @@
-from littler.level import Level, DEFAULT_FLOAT, UNUSED_INT
+from littler.level import Level, DEFAULT_FLOAT, DEFAULT_INT
 
 # The contents of this module are implemented using the documentation found at
 # http://www2.mmm.ucar.edu/wrf/users/wrfda/OnlineTutorial/Help/littler.html
@@ -108,9 +108,9 @@ class _Header:
             lv.lat, lv.lon,
             lv.id, lv.name, lv.platform, lv.source,
             lv.alt,
-            self.valid_fields, UNUSED_INT, UNUSED_INT, lv.seq_num, UNUSED_INT,
+            self.valid_fields, DEFAULT_INT, DEFAULT_INT, lv.seq_num, DEFAULT_INT,
             _b_to_str(lv.is_sounding), _b_to_str(lv.bogus), _b_to_str(False),
-            UNUSED_INT, UNUSED_INT,
+            DEFAULT_INT, DEFAULT_INT,
             lv.date,
             *([DEFAULT_FLOAT, 0]*13)
         )
