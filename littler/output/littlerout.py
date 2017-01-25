@@ -123,7 +123,10 @@ class _Header:
             _b_to_str(lv.is_sounding), _b_to_str(lv.bogus), _b_to_str(False),
             DEFAULT_INT, DEFAULT_INT,
             lv.date,
-            *([DEFAULT_FLOAT, 0]*13)
+            lv.slp, 0,
+            *([DEFAULT_FLOAT, 0]*3),
+            lv.sfc_pres, 0,
+            *([DEFAULT_FLOAT, 0]*8)
         )
 
 

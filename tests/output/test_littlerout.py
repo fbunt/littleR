@@ -5,6 +5,7 @@ from littler.output.littlerout import LittleROut, _Record, _Header, _Report
 from littler.level import Level, DEFAULT_FLOAT
 
 
+# Taken from http://www2.mmm.ucar.edu/wrf/users/wrfda/OnlineTutorial/Help/littler.html
 HEADER_VALS = [
     [
         39.78000, -104.86000, '72469', 'DENVER/STAPLETON INT., CO. / U.S.A.',
@@ -13,12 +14,11 @@ HEADER_VALS = [
      ],
     [
         -71.86300, -125.59700, -7777, 'Platform Id >>> 71656', 'FM-18 BUOY',
-        'GTS (ROHK) SSVX07 LFVW 051100', 0.00000, 6, -888888, 564,
+        'GTS (ROHK) SSVX07 LFVW 051100', 0.00000, 564,
         False, False, '20080205110000', 97940.0, 97940.0
      ]
 ]
 
-# Taken from http://www2.mmm.ucar.edu/wrf/users/wrfda/OnlineTutorial/Help/littler.html
 LEVELS = [
     [
         [83500.0, -888888.0, 264.44998, 263.35001, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0],
@@ -34,14 +34,14 @@ LEVELS = [
         [10000.0, -888888.0, 218.64999, 194.64999, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0]
     ],
     [
-
+        [97940.00000, 0.0, 272.04999, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0, -888888.0, -888888.00000]
     ]
 ]
 
 
 class TestLittleROut(TestCase):
 
-    def test_littleROut_start_new_report(self):
+    def test_LittleROut_start_new_report(self):
         out = LittleROut(StringIO())
 
         out.start_new_report()
@@ -54,7 +54,7 @@ class TestLittleROut(TestCase):
         self.assertEqual(len(out.reports[1].records), len(LEVELS[0]))
         self.assertEqual(len(out.reports[2].records), 0)
 
-    def test_littleROut_add_level_error(self):
+    def test_LittleROut_add_level_error(self):
         # Make sure that LittleROut fails if a report hasn't been started
         out = LittleROut(StringIO())
 
@@ -66,19 +66,45 @@ class TestLittleROut(TestCase):
         except IndexError:
             self.fail('LittleROut.add_level raised an unexpected error.')
 
-    def test_littleROut_add_level(self):
-        # testlv1 = Level()
-        # testlv1.alt = 0
-        # testlv2 = Level()
-        # testlv2.alt = 1
-        # out = LittleROut(StringIO())
-        #
-        # out.start_new_report()
-        # out.add_level(testlv1)
-        # out.start_new_report()
-        # out.add_level(testlv2)
-        pass
-        # self.assertNotEqual(out.reports[0].records[0].lv, out.reports[1].records[0].lv)
+    def test_LittleROut_add_level(self):
+        testlv1 = Level()
+        testlv1.height = (0.0, 0)
+        testlv2 = Level()
+        testlv2.height = (1.0, 0)
+        out = LittleROut(StringIO())
+
+        out.start_new_report()
+        out.add_level(testlv1)
+        out.start_new_report()
+        out.add_level(testlv2)
+        # Make sure that add_level adds the levels to the appropriate reports
+        self.assertNotEqual(out.reports[0].records[0].lv, out.reports[1].records[0].lv)
+        self.assertNotEqual(str(out.reports[0].records[0]), str(out.reports[1].records[0]))
+
+    def test_LittleROut_write_contents_single_report(self):
+        out = LittleROut(StringIO())
+
+        out.start_new_report([_vals_to_level(HEADER_VALS[0], lv) for lv in LEVELS[0]])
+        out.write_contents()
+        result = out.out.getvalue()
+        out.close()
+
+        with open('../data/ExampleReport.txt') as fd:
+            expected_out = ''.join(fd.readlines())
+        self.assertEqual(result, expected_out)
+
+    def test_LittleROut_write_contents_multiple_reports(self):
+        out = LittleROut(StringIO())
+
+        out.start_new_report([_vals_to_level(HEADER_VALS[0], lv) for lv in LEVELS[0]])
+        out.start_new_report([_vals_to_level(HEADER_VALS[1], lv) for lv in LEVELS[1]])
+        out.write_contents()
+        result = out.out.getvalue()
+        out.close()
+
+        with open('../data/ExampleMultipleReports.txt') as fd:
+            expected_out = ''.join(fd.readlines())
+        self.assertEqual(result, expected_out)
 
     def test_recordStr(self):
         # Test default
