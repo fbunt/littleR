@@ -5,8 +5,34 @@ from littler.level import Level, DEFAULT_FLOAT, DEFAULT_INT
 
 
 class LittleROut:
+    """A class for writing data to a file using the LittleR format.
+
+    LittleR documentation can be found here: http://www2.mmm.ucar.edu/wrf/users/wrfda/OnlineTutorial/Help/littler.html
+
+    LittleR format structure:
+    File:
+        * Report:
+            - Header
+            - Record line
+            - Record line
+            - ...
+            - End Record (sentinel)
+            - Tail integers
+        * Report:
+            ...
+    """
     def __init__(self, dst_file):
         self.reports = []
+        self.out = dst_file
+
+    def set_new_destination(self, dst_file):
+        """Sets a new output destination.
+
+        The previous destination is flushed and closed if not already
+        """
+        if not self.out.closed:
+            self.out.flush()
+            self.out.close()
         self.out = dst_file
 
     def start_new_report(self, levels=None):
@@ -16,25 +42,37 @@ class LittleROut:
         self.reports.append(r)
 
     def add_level(self, level):
+        """Add a new level to the current report.
+
+        'start_new_report' must have been called before this method is called.
+        """
         self.reports[-1].add_record(level)
 
     def add_levels(self, levels):
+        """Add multiple levels"""
         for lv in levels:
             self.add_level(lv)
 
     def write_contents(self):
+        """Writes all reports to the destination before clearing them."""
         for rep in self.reports:
             self.out.write(str(rep))
+        self.clear()
+
+    def clear(self):
+        """Remove all unwritten reports"""
+        self.reports = []
 
     def close(self):
         self.out.close()
+        self.clear()
 
 
 _END_RECORD_VALUE = -777777.0
 # Format string for the tail line of a Report.
 # Note: the documentation on the site states that the first integer is the "number of valid
 #       fields for the observation", but the actual value seems to be the number of valid
-#       records in the report as seen in MIDAS2LITTLER.
+#       records (levels) in the report as seen in MIDAS2LITTLER.
 # Number of valid fields (Number of levels), Errors, Warnings
 _TAIL_FMT_STR = '{:>7d}'*3
 
