@@ -1,5 +1,4 @@
 from unittest import TestCase
-from io import StringIO
 
 from littler.output.format import LittleRFormatter, _Record, _Header, _Report
 from littler.level import Level, DEFAULT_FLOAT
@@ -39,39 +38,38 @@ LEVELS = [
 ]
 
 
-class TestLittleROut(TestCase):
+class TestFormat(TestCase):
 
-    def test_LittleROut_start_new_report(self):
-        out = LittleRFormatter(StringIO())
+    def test_LittleRFormatter_start_new_report(self):
+        fmtr = LittleRFormatter()
 
-        out.start_new_report()
-        out.start_new_report([_vals_to_level(HEADER_VALS[0], lv) for lv in LEVELS[0]])
-        out.start_new_report()
-        out.close()
+        fmtr.start_new_report()
+        fmtr.start_new_report(_get_levels(0))
+        fmtr.start_new_report()
 
-        self.assertEqual(len(out.reports), 3)
-        self.assertEqual(len(out.reports[0].records), 0)
-        self.assertEqual(len(out.reports[1].records), len(LEVELS[0]))
-        self.assertEqual(len(out.reports[2].records), 0)
+        self.assertEqual(len(fmtr.reports), 3)
+        self.assertEqual(len(fmtr.reports[0].records), 0)
+        self.assertEqual(len(fmtr.reports[1].records), len(LEVELS[0]))
+        self.assertEqual(len(fmtr.reports[2].records), 0)
 
-    def test_LittleROut_add_level_error(self):
-        # Make sure that LittleROut fails if a report hasn't been started
-        out = LittleRFormatter(StringIO())
+    def test_LittleRFormatter_add_level_error(self):
+        # Make sure that the formatter fails if a report hasn't been started
+        fmtr = LittleRFormatter()
 
-        self.assertRaises(IndexError, out.add_level, Level())
+        self.assertRaises(IndexError, fmtr.add_level, Level())
 
-        out.start_new_report()
+        fmtr.start_new_report()
         try:
-            out.add_level(Level())
+            fmtr.add_level(Level())
         except IndexError:
-            self.fail('LittleROut.add_level raised an unexpected error.')
+            self.fail('add_level raised an unexpected error.')
 
-    def test_LittleROut_add_level(self):
+    def test_LittleRFormatter_add_level(self):
         testlv1 = Level()
         testlv1.height = (0.0, 0)
         testlv2 = Level()
         testlv2.height = (1.0, 0)
-        out = LittleRFormatter(StringIO())
+        out = LittleRFormatter()
 
         out.start_new_report()
         out.add_level(testlv1)
@@ -81,26 +79,31 @@ class TestLittleROut(TestCase):
         self.assertNotEqual(out.reports[0].records[0].lv, out.reports[1].records[0].lv)
         self.assertNotEqual(str(out.reports[0].records[0]), str(out.reports[1].records[0]))
 
-    def test_LittleROut_write_contents_single_report(self):
-        out = LittleRFormatter(StringIO())
+    def test_LittleRFormatter_no_reports(self):
+        fmtr = LittleRFormatter()
+        fmtr.start_new_report()
+        result = fmtr.format()
 
-        out.start_new_report([_vals_to_level(HEADER_VALS[0], lv) for lv in LEVELS[0]])
-        out.write_contents()
-        result = out.out.getvalue()
-        out.close()
+        with open('../data/ExampleEmptyReport.txt') as fd:
+            expected = fd.read()
+        self.assertEqual(result, expected)
+
+    def test_LittleRFormatter_format_single_report(self):
+        fmtr = LittleRFormatter()
+
+        fmtr.start_new_report(_get_levels(0))
+        result = fmtr.format()
 
         with open('../data/ExampleReport.txt') as fd:
             expected_out = fd.read()
         self.assertEqual(result, expected_out)
 
-    def test_LittleROut_write_contents_multiple_reports(self):
-        out = LittleRFormatter(StringIO())
+    def test_LittleRFormatter_format_multiple_reports(self):
+        fmtr = LittleRFormatter()
 
-        out.start_new_report([_vals_to_level(HEADER_VALS[0], lv) for lv in LEVELS[0]])
-        out.start_new_report([_vals_to_level(HEADER_VALS[1], lv) for lv in LEVELS[1]])
-        out.write_contents()
-        result = out.out.getvalue()
-        out.close()
+        fmtr.start_new_report([_vals_to_level(HEADER_VALS[0], lv) for lv in LEVELS[0]])
+        fmtr.start_new_report([_vals_to_level(HEADER_VALS[1], lv) for lv in LEVELS[1]])
+        result = fmtr.format()
 
         with open('../data/ExampleMultipleReports.txt') as fd:
             expected_out = fd.read()
@@ -142,6 +145,10 @@ class TestLittleROut(TestCase):
         self.assertEqual(str(rep), expected_str, 'Report str must match expected')
 
 
+def _get_levels(i):
+    return [_vals_to_level(HEADER_VALS[i], lv) for lv in LEVELS[i]]
+
+
 def _vals_to_level(hvals, vals):
     lv = Level()
     _set_header_vals(hvals, lv)
@@ -171,5 +178,5 @@ def _set_header_vals(hvals, lv):
     lv.is_sounding = hvals[8]
     lv.bogus = hvals[9]
     lv.date = hvals[10]
-    lv.slp = hvals[11]
-    lv.sfc_pres = hvals[12]
+    lv.slp = (hvals[11], 0)
+    lv.sfc_pres = (hvals[12], 0)

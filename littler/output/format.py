@@ -79,10 +79,9 @@ class _Report:
     def __init__(self):
         self.records = []
         # Ending sentinel level
-        lv = Level()
-        lv.pres = (_END_RECORD_VALUE, 0)
-        lv.height = (_END_RECORD_VALUE, 0)
-        self.ending_rec = _Record(lv)
+        self.ending_lv = Level()
+        self.ending_lv.pres = (_END_RECORD_VALUE, 0)
+        self.ending_lv.height = (_END_RECORD_VALUE, 0)
 
     def add_record(self, level):
         self.records.append(_Record(level))
@@ -92,12 +91,14 @@ class _Report:
             self.add_record(lv)
 
     def __str__(self):
-        header = _Header(self.records[0].lv, len(self.records)*self.records[0].lv.valid_fields)
-        tail = _TAIL_FMT_STR.format(len(self.records), 0, 0)
+        self.add_record(self.ending_lv)
+        # Don't include end record
+        nrecs = len(self.records) - 1
+        header = _Header(self.records[0].lv, nrecs*self.records[0].lv.valid_fields)
+
         out = [str(header)]
         out.extend([str(r) for r in self.records])
-        out.append(str(self.ending_rec))
-        out.append(tail)
+        out.append(_TAIL_FMT_STR.format(nrecs, 0, 0))
         out = '\n'.join(out)
         out += '\n'
         return out
@@ -150,9 +151,9 @@ class _Header:
             _b_to_str(lv.is_sounding), _b_to_str(lv.bogus), _b_to_str(False),
             DEFAULT_INT, DEFAULT_INT,
             lv.date,
-            lv.slp, 0,
+            lv.slp[0], 0,
             *([DEFAULT_FLOAT, 0]*3),
-            lv.sfc_pres, 0,
+            lv.sfc_pres[0], 0,
             *([DEFAULT_FLOAT, 0]*8)
         )
 
