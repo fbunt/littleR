@@ -90,7 +90,7 @@ class TestLittleROut(TestCase):
         out.close()
 
         with open('../data/ExampleReport.txt') as fd:
-            expected_out = ''.join(fd.readlines())
+            expected_out = fd.read()
         self.assertEqual(result, expected_out)
 
     def test_LittleROut_write_contents_multiple_reports(self):
@@ -103,7 +103,7 @@ class TestLittleROut(TestCase):
         out.close()
 
         with open('../data/ExampleMultipleReports.txt') as fd:
-            expected_out = ''.join(fd.readlines())
+            expected_out = fd.read()
         self.assertEqual(result, expected_out)
 
     def test_recordStr(self):
@@ -138,7 +138,7 @@ class TestLittleROut(TestCase):
         rep.add_records(levels)
 
         with open('../data/ExampleReport.txt') as fd:
-            expected_str = ''.join(fd.readlines())
+            expected_str = fd.read()
         self.assertEqual(str(rep), expected_str, 'Report str must match expected')
 
 
