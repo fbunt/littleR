@@ -4,7 +4,7 @@ from littler.level import Level, DEFAULT_FLOAT, DEFAULT_INT
 # http://www2.mmm.ucar.edu/wrf/users/wrfda/OnlineTutorial/Help/littler.html
 
 
-class LittleROut:
+class LittleRFormatter:
     """A class for writing data to a file using the LittleR format.
 
     LittleR documentation can be found here: http://www2.mmm.ucar.edu/wrf/users/wrfda/OnlineTutorial/Help/littler.html

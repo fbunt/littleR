@@ -1,7 +1,7 @@
 from unittest import TestCase
 from io import StringIO
 
-from littler.output.littlerout import LittleROut, _Record, _Header, _Report
+from littler.output.format import LittleRFormatter, _Record, _Header, _Report
 from littler.level import Level, DEFAULT_FLOAT
 
 
@@ -42,7 +42,7 @@ LEVELS = [
 class TestLittleROut(TestCase):
 
     def test_LittleROut_start_new_report(self):
-        out = LittleROut(StringIO())
+        out = LittleRFormatter(StringIO())
 
         out.start_new_report()
         out.start_new_report([_vals_to_level(HEADER_VALS[0], lv) for lv in LEVELS[0]])
@@ -56,7 +56,7 @@ class TestLittleROut(TestCase):
 
     def test_LittleROut_add_level_error(self):
         # Make sure that LittleROut fails if a report hasn't been started
-        out = LittleROut(StringIO())
+        out = LittleRFormatter(StringIO())
 
         self.assertRaises(IndexError, out.add_level, Level())
 
@@ -71,7 +71,7 @@ class TestLittleROut(TestCase):
         testlv1.height = (0.0, 0)
         testlv2 = Level()
         testlv2.height = (1.0, 0)
-        out = LittleROut(StringIO())
+        out = LittleRFormatter(StringIO())
 
         out.start_new_report()
         out.add_level(testlv1)
@@ -82,7 +82,7 @@ class TestLittleROut(TestCase):
         self.assertNotEqual(str(out.reports[0].records[0]), str(out.reports[1].records[0]))
 
     def test_LittleROut_write_contents_single_report(self):
-        out = LittleROut(StringIO())
+        out = LittleRFormatter(StringIO())
 
         out.start_new_report([_vals_to_level(HEADER_VALS[0], lv) for lv in LEVELS[0]])
         out.write_contents()
@@ -94,7 +94,7 @@ class TestLittleROut(TestCase):
         self.assertEqual(result, expected_out)
 
     def test_LittleROut_write_contents_multiple_reports(self):
-        out = LittleROut(StringIO())
+        out = LittleRFormatter(StringIO())
 
         out.start_new_report([_vals_to_level(HEADER_VALS[0], lv) for lv in LEVELS[0]])
         out.start_new_report([_vals_to_level(HEADER_VALS[1], lv) for lv in LEVELS[1]])
