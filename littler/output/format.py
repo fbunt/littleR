@@ -21,19 +21,8 @@ class LittleRFormatter:
         * Report:
             ...
     """
-    def __init__(self, dst_file):
+    def __init__(self):
         self.reports = []
-        self.out = dst_file
-
-    def set_new_destination(self, dst_file):
-        """Sets a new output destination.
-
-        The previous destination is flushed and closed if not already
-        """
-        if not self.out.closed:
-            self.out.flush()
-            self.out.close()
-        self.out = dst_file
 
     def start_new_report(self, levels=None):
         r = _Report()
@@ -44,7 +33,7 @@ class LittleRFormatter:
     def add_level(self, level):
         """Add a new level to the current report.
 
-        'start_new_report' must have been called before this method is called.
+        'start_new_report' must have been called before this method.
         """
         self.reports[-1].add_record(level)
 
@@ -53,19 +42,19 @@ class LittleRFormatter:
         for lv in levels:
             self.add_level(lv)
 
-    def write_contents(self):
-        """Writes all reports to the destination before clearing them."""
-        for rep in self.reports:
-            self.out.write(str(rep))
-        self.clear()
+    def format(self, clear=False):
+        """Return all reports formatted into a single string.
+
+        If `clear`, all reports are cleared.
+        """
+        out = ''.join([str(rep) for rep in self.reports])
+        if clear:
+            self.clear()
+        return out
 
     def clear(self):
-        """Remove all unwritten reports"""
+        """Remove all reports"""
         self.reports = []
-
-    def close(self):
-        self.out.close()
-        self.clear()
 
 
 _END_RECORD_VALUE = -777777.0
