@@ -43,7 +43,7 @@ _ID = 15
 
 
 class GrawAdapter(InputAdapter):
-    def __init__(self, src, src_start_datetime):
+    def __init__(self, src, src_start_datetime, name='', id='', source=''):
         """
         :param src: The data source file or file name. Ownership is NOT assumed for open file objects.
         :param src_start_datetime: datetime.datetime The start data and time of the measurements
@@ -75,7 +75,7 @@ class GrawAdapter(InputAdapter):
             level.is_sounding = True
             level.bogus = False
             level.date = _get_date_str(self._start_date, lv.loc[_ITIME])
-            # TODO: implement SLP
+            # TODO: implement SLP, sfc_pres
 
             # Fields
             level.pres = (_convert_pres(lv.loc[_IPRES]), 0)

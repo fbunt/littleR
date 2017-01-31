@@ -1,1 +1,1 @@
-from littler.output.littlerout import LittleROut
+from littler.output.format import LittleRFormatter
