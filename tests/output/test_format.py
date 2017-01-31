@@ -101,8 +101,8 @@ class TestFormat(TestCase):
     def test_LittleRFormatter_format_multiple_reports(self):
         fmtr = LittleRFormatter()
 
-        fmtr.start_new_report([_vals_to_level(HEADER_VALS[0], lv) for lv in LEVELS[0]])
-        fmtr.start_new_report([_vals_to_level(HEADER_VALS[1], lv) for lv in LEVELS[1]])
+        fmtr.start_new_report(_get_levels(0))
+        fmtr.start_new_report(_get_levels(1))
         result = fmtr.format()
 
         with open('../data/ExampleMultipleReports.txt') as fd:
