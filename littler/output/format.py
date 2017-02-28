@@ -145,12 +145,12 @@ class _Header:
         # See above for fields
         return _HEADER_FMT_STR.format(
             lv.lat, lv.lon,
-            lv.id, lv.name, lv.platform, lv.source,
+            lv.id[:40], lv.name[:40], lv.platform[:40], lv.source[:40],
             lv.alt,
             self.valid_fields, DEFAULT_INT, DEFAULT_INT, lv.seq_num, DEFAULT_INT,
             _b_to_str(lv.is_sounding), _b_to_str(lv.bogus), _b_to_str(False),
             DEFAULT_INT, DEFAULT_INT,
-            lv.date,
+            lv.date[:40],
             lv.slp[0], 0,
             *([DEFAULT_FLOAT, 0]*3),
             lv.sfc_pres[0], 0,

@@ -135,6 +135,18 @@ class TestFormat(TestCase):
         expected_str = '            39.78000          -104.8600072469                                   DENVER/STAPLETON INT., CO. / U.S.A.     FM-35 TEMP                              GTS (ROHK) UKUS09 KWBC 051200 RRA                 1626.00000         1   -888888   -888888       890   -888888         T         F         F   -888888   -888888      20080205120000-888888.00000      0-888888.00000      0-888888.00000      0-888888.00000      0-888888.00000      0-888888.00000      0-888888.00000      0-888888.00000      0-888888.00000      0-888888.00000      0-888888.00000      0-888888.00000      0-888888.00000      0'
         self.assertEqual(str(header), expected_str)
 
+    def test_header_length(self):
+        max_len = 600
+
+        lv = Level()
+        lv.name = 'A'*100
+        lv.id = 'I'*100
+        lv.source = 'S'*100
+
+        h = _Header(lv, lv.valid_fields)
+
+        self.assertEqual(len(str(h)), max_len)
+
     def test_reportStr(self):
         levels = [_vals_to_level(HEADER_VALS[0], lv) for lv in LEVELS[0]]
         rep = _Report()
