@@ -1,11 +1,11 @@
 import datetime
-
 import pandas as pd
+import re
+
 
 from littler.adapters.adapter import InputAdapter
 from littler.level import Level
 
-_NUM_COLS = 16
 # Time (sec): seconds after start
 _ITIME = 0
 # Pressure (mB)
@@ -23,23 +23,13 @@ _ILAT = 6
 # Longitude (degrees)
 _ILON = 7
 # Altitude (m)
-# TODO: add note on why this is different from elevation
 _IALT = 8
-# Geopotential (m)
-_IGPOT = 9
 # Dew point (C)
-_IDEW = 10
-# Virtual Temperature (C)
-_IVTEMP = 11
-# Elevation (degrees)
-# TODO: figure out what is going on with units
-_IELE = 12
-# Azimuth (degrees)
-_IAZI = 13
-# Range (m) TODO: what is this?
-_IRANGE = 14
-# D (kg/m3) TODO: what is this?
-_ID = 15
+_IDEW = 9
+
+
+class GrawParsingError(Exception):
+    pass
 
 
 class GrawAdapter(InputAdapter):
@@ -57,9 +47,11 @@ class GrawAdapter(InputAdapter):
         return self.levels[pos]
 
     def _parse(self, src):
-        converters = {_ITIME: int}
-        data = pd.read_table(src, names=range(_NUM_COLS), skiprows=3, skipfooter=10, converters=converters,
-                             engine='python')
+        try:
+            data = _parse_graw_file(src)
+        except GrawParsingError as e:
+            raise GrawParsingError("Could not parse graw data file: " + e.message)
+
         self.count = data.shape[0]
         for i in range(self.count):
             level = Level()
@@ -105,3 +97,53 @@ def _convert_pres(p_mb):
 
 def _convert_temp(t_c):
     return t_c + 273.15
+
+
+# Data column labels
+_LABEL_TIME = 'Time'
+_LABEL_PRESS = 'P'
+_LABEL_TEMP = 'T'
+_LABEL_RH = 'Hu'
+_LABEL_WS = 'Ws'
+_LABEL_Wd = 'Wd'
+_LABEL_LONG = 'Long.'
+_LABEL_LAT = 'Lat.'
+_LABEL_ALT = 'Alt'
+_LABEL_DEW = 'Dewp.'
+# These should have the same index as the corresponding index constant above.
+_LABELS = [
+    _LABEL_TIME, _LABEL_PRESS, _LABEL_TEMP, _LABEL_RH, _LABEL_WS,
+    _LABEL_Wd, _LABEL_LONG, _LABEL_LAT, _LABEL_ALT, _LABEL_DEW
+]
+
+_DATA_INDICATOR = 'Profile Data:'
+
+
+def _remove_graw_header(fd):
+    for line in fd:
+        if line.startswith(_DATA_INDICATOR):
+            return True
+    return False
+
+
+def _parse_column_labels(fd):
+    """Find the desired columns and return their indices"""
+    cols = []
+    line = fd.readline().strip()
+    # Don't split on single spaces so multi word column labels are preserved (e.g. 'Virt. Temp')
+    col_labels = re.split('[\t\n\r\f\v]+|[\s]{2,}', line)
+    for label in _LABELS:
+        try:
+            cols.append(col_labels.index(label))
+        except ValueError:
+            raise GrawParsingError("Could not identify data columns")
+    return cols
+
+
+def _parse_graw_file(fd):
+    if not _remove_graw_header(fd):
+        raise GrawParsingError("Could not find profile data")
+    cols = _parse_column_labels(fd)
+    converters = {_ITIME: int}
+    return pd.read_table(fd, names=range(len(_LABELS)), usecols=cols, skiprows=1,
+                         skipfooter=10, converters=converters, engine='python')
