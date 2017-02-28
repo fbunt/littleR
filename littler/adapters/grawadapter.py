@@ -2,9 +2,10 @@ import datetime
 import pandas as pd
 import re
 
-
 from littler.adapters.adapter import InputAdapter
 from littler.level import Level
+from littler.util import uv_from_met
+
 
 # Time (sec): seconds after start
 _ITIME = 0
@@ -76,9 +77,9 @@ class GrawAdapter(InputAdapter):
             level.dewpoint = (_convert_temp(lv.loc[_IDEW]), 0)
             level.windspd = (lv.loc[_IWS], 0)
             level.winddir = (lv.loc[_IWD], 0)
-            # TODO: implement wind u/v
-            level.windu = (0, 0)
-            level.windv = (0, 0)
+            u, v = uv_from_met(level.windspd, level.winddir)
+            level.windu = (u, 0)
+            level.windv = (v, 0)
             level.rh = (lv.loc[_IRH], 0)
 
             level.valid_fields = 9
