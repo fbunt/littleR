@@ -34,7 +34,7 @@ class GrawParsingError(Exception):
 
 
 class GrawAdapter(InputAdapter):
-    def __init__(self, src, src_start_datetime, name='', id='', source=''):
+    def __init__(self, src, src_start_datetime, name='', src_id='', source=''):
         """
         :param src: The data source file or file name. Ownership is NOT assumed for open file objects.
         :param src_start_datetime: datetime.datetime The start data and time of the measurements
@@ -42,6 +42,9 @@ class GrawAdapter(InputAdapter):
         super().__init__()
         self.levels = []
         self._start_date = src_start_datetime
+        self._src_name = name
+        self._src_id = src_id
+        self._src_source = source
         self._parse(src)
 
     def getlevel(self, pos):
@@ -60,9 +63,10 @@ class GrawAdapter(InputAdapter):
             # Header
             level.lat = lv.loc[_ILAT]
             level.lon = lv.loc[_ILON]
-            # TODO: implement id, name
+            level.id = self._src_id
+            level.name = self._src_name
+            level.source = self._src_source
             level.platform = 'FM-38 TEMP MOBIL'
-            # TODO: implement source
             level.alt = lv.loc[_IALT]
             # TODO: implement seq num
             level.is_sounding = True
