@@ -79,9 +79,11 @@ class GrawAdapter(InputAdapter):
             level.height = (lv.loc[_IALT], 0)
             level.temp = (_convert_temp(lv.loc[_ITEMP]), 0)
             level.dewpoint = (_convert_temp(lv.loc[_IDEW]), 0)
-            level.windspd = (lv.loc[_IWS], 0)
-            level.winddir = (lv.loc[_IWD], 0)
-            u, v = uv_from_met(level.windspd, level.winddir)
+            wspd = lv.loc[_IWS]
+            wdir = lv.loc[_IWD]
+            level.windspd = (wspd, 0)
+            level.winddir = (wdir, 0)
+            u, v = uv_from_met(wspd, wdir)
             level.windu = (u, 0)
             level.windv = (v, 0)
             level.rh = (lv.loc[_IRH], 0)
