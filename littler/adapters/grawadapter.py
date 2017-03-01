@@ -4,7 +4,7 @@ import re
 
 from littler.adapters.adapter import InputAdapter
 from littler.level import Level
-from littler.util import uv_from_met
+from littler.utils import uv_from_met
 
 
 # Time (sec): seconds after start
