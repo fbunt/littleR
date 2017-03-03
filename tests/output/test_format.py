@@ -3,6 +3,8 @@ from unittest import TestCase
 from littler.output.format import LittleRFormatter, _Record, _Header, _Report
 from littler.level import Level, DEFAULT_FLOAT
 
+from tests.utils import get_data_filename
+
 
 # Taken from http://www2.mmm.ucar.edu/wrf/users/wrfda/OnlineTutorial/Help/littler.html
 HEADER_VALS = [
@@ -84,7 +86,7 @@ class TestFormat(TestCase):
         fmtr.start_new_report()
         result = fmtr.format()
 
-        with open('../data/ExampleEmptyReport.txt') as fd:
+        with open(get_data_filename('ExampleEmptyReport.txt')) as fd:
             expected = fd.read()
         self.assertEqual(result, expected)
 
@@ -94,7 +96,7 @@ class TestFormat(TestCase):
         fmtr.start_new_report(_get_levels(0))
         result = fmtr.format()
 
-        with open('../data/ExampleReport.txt') as fd:
+        with open(get_data_filename('ExampleReport.txt')) as fd:
             expected_out = fd.read()
         self.assertEqual(result, expected_out)
 
@@ -105,7 +107,7 @@ class TestFormat(TestCase):
         fmtr.start_new_report(_get_levels(1))
         result = fmtr.format()
 
-        with open('../data/ExampleMultipleReports.txt') as fd:
+        with open(get_data_filename('ExampleMultipleReports.txt')) as fd:
             expected_out = fd.read()
         self.assertEqual(result, expected_out)
 
@@ -152,7 +154,7 @@ class TestFormat(TestCase):
         rep = _Report()
         rep.add_records(levels)
 
-        with open('../data/ExampleReport.txt') as fd:
+        with open(get_data_filename('ExampleReport.txt')) as fd:
             expected_str = fd.read()
         self.assertEqual(str(rep), expected_str, 'Report str must match expected')
 

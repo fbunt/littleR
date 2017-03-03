@@ -4,6 +4,9 @@ from unittest import TestCase
 from littler.level import Level
 from littler.adapters import GrawAdapter
 
+from tests.utils import get_data_filename
+
+
 test_file_count = 4040
 
 
@@ -11,7 +14,8 @@ class TestGrawAdapter(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        with open('../data/GrawProfile_7_14_SLU.txt', encoding='latin-1') as fd:
+        fname = get_data_filename('GrawProfile_7_14_SLU.txt')
+        with open(fname, encoding='latin-1') as fd:
             cls.now = datetime.datetime.today()
             cls.adapter = GrawAdapter(fd, cls.now)
 
