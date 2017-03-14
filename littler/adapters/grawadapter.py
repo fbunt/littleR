@@ -3,6 +3,7 @@ import pandas as pd
 import re
 
 from littler.adapters.adapter import InputAdapter
+from littler.core import LittleRError
 from littler.level import Level
 from littler.utils import uv_from_met
 
@@ -29,7 +30,7 @@ _IALT = 8
 _IDEW = 9
 
 
-class GrawParsingError(Exception):
+class GrawParsingError(LittleRError):
     pass
 
 

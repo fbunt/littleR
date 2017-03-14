@@ -3,8 +3,10 @@ import os
 import re
 import yaml
 
+from littler.core import LittleRError
 
-class MetaDataParsingError(Exception):
+
+class MetaDataParsingError(LittleRError):
     pass
 
 
