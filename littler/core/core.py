@@ -6,12 +6,17 @@ class LittleRError(Exception):
 
 
 class Core:
+    """The main logic class for littler
+
+    Calling the run method will execute the main logic loop.
+    """
     def __init__(self, adapter, fdout):
         self.out = fdout
         self.adapter = adapter
         self.fmtr = LittleRFormatter()
 
     def run(self):
+        """Write all levels from the source to the output in LITTLE_R format"""
         if self.adapter.count <= 0:
             raise LittleRError('No data found. Level count: ' + str(self.adapter.count))
 
