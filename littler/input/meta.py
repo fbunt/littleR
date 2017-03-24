@@ -77,7 +77,7 @@ def _parse_date(datestr):
 def _parse_time(timestr):
     h, m, s = timestr.strip().split(':')
     try:
-        return datetime.time(int(h), int(m), int(s), 0, _UTC())
+        return datetime.time(int(h), int(m), int(s), 0, UTC())
     except ValueError:
         raise MetaDataParsingError('Could not parse time: ' + repr(timestr))
 
@@ -85,7 +85,7 @@ def _parse_time(timestr):
 _ZERO = datetime.timedelta(0)
 
 
-class _UTC(datetime.tzinfo):
+class UTC(datetime.tzinfo):
     """UTC"""
 
     def utcoffset(self, dt):
