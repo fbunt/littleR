@@ -20,11 +20,11 @@ class Core:
         if self.adapter.count <= 0:
             raise LittleRError('No data found. Level count: ' + str(self.adapter.count))
 
-        curlv = self.adapter.get(0)
+        curlv = self.adapter.getlevel(0)
         self._handle_next_level(curlv, None)
         lastlv = curlv
         for i in range(1, self.adapter.count):
-            curlv = self.adapter.get(i)
+            curlv = self.adapter.getlevel(i)
             self._handle_next_level(curlv, lastlv)
             lastlv = curlv
         self.out.write(self.fmtr.format(True))
