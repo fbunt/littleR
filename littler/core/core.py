@@ -5,39 +5,31 @@ class LittleRError(Exception):
     pass
 
 
-class Core:
-    """The main logic class for littler
+def run_core(adapter, fdout):
+    """Write all levels from the source to the output in LITTLE_R format"""
+    fmtr = LittleRFormatter()
+    if adapter.count <= 0:
+        raise LittleRError('No data found. Level count: ' + str(adapter.count))
 
-    Calling the run method will execute the main logic loop.
-    """
-    def __init__(self, adapter, fdout):
-        self.out = fdout
-        self.adapter = adapter
-        self.fmtr = LittleRFormatter()
-
-    def run(self):
-        """Write all levels from the source to the output in LITTLE_R format"""
-        if self.adapter.count <= 0:
-            raise LittleRError('No data found. Level count: ' + str(self.adapter.count))
-
-        curlv = self.adapter.getlevel(0)
-        self._handle_next_level(curlv, None)
+    curlv = adapter.getlevel(0)
+    _handle_next_level(curlv, None, fmtr)
+    lastlv = curlv
+    for i in range(1, adapter.count):
+        curlv = adapter.getlevel(i)
+        _handle_next_level(curlv, lastlv, fmtr)
         lastlv = curlv
-        for i in range(1, self.adapter.count):
-            curlv = self.adapter.getlevel(i)
-            self._handle_next_level(curlv, lastlv)
-            lastlv = curlv
-        self.out.write(self.fmtr.format(True))
-        self.out.close()
+    fdout.write(fmtr.format(True))
+    fdout.close()
 
-    def _handle_next_level(self, cur, last):
-        if not last:
-            self.fmtr.start_new_report([cur])
+
+def _handle_next_level(cur, last, formatter):
+    if not last:
+        formatter.start_new_report([cur])
+    else:
+        if _colocal(cur, last) and _cotemporal(cur, last):
+            formatter.add_level(cur)
         else:
-            if _colocal(cur, last) and _cotemporal(cur, last):
-                self.fmtr.add_level(cur)
-            else:
-                self.fmtr.start_new_report([cur])
+            formatter.start_new_report([cur])
 
 
 def _colocal(cur, last):

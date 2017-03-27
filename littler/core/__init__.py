@@ -1,1 +1,1 @@
-from littler.core.core import Core, LittleRError
+from littler.core.core import run_core, LittleRError
