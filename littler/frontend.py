@@ -5,7 +5,7 @@ import os
 
 from littler.core import LittleRError, run_core
 from littler.adapters import adapters
-from littler.input import parse_meta_data
+from littler.input.meta import parse_meta_data
 
 
 class LittleRInputError(LittleRError):
@@ -47,6 +47,13 @@ def _compose_meta_data(fd, user_id, user_source, user_name, user_date_str):
     return parse_meta_data(fd, user_id, user_source, user_name, user_datetime)
 
 
+def _check_outfile(fname):
+    if os.path.isfile(fname):
+        raise LittleRInputError('Output file name already exists: ' + fname)
+    return str(fname)
+
+
+# TODO: add logger with verbosity
 # TODO: add full doc
 lrparser = argparse.ArgumentParser(prog='littler',
                                    description='A program for converting various data formats to the LITTLE_R format.')
@@ -59,13 +66,15 @@ lrparser.add_argument('-d', '--date_time_string',
                       help='String representing the date and (start) time of the data. Has the form \'MMDDYYYYhhmmss\'',
                       type=_parse_datestr)
 lrparser.add_argument('-s', '--source', help='Name of of the data\'s source. If this includes spaces, use quotes.')
+lrparser.add_argument('-o', '--outfile', help='Name of the output file', default='littler.out', type=_check_outfile)
 lrparser.add_argument('-t', '--type', help='The type of the file to be converted (e.g. graw)', required=True,
                       type=_validate_type)
-args = lrparser.parse_args()
-# TODO: reorganize
-fd = iopen(args.file, encoding=args.encoding)
-id_, source, name, dt = _compose_meta_data(fd, args.id, args.source, args.name, args.date_time_string)
-adapter = adapters[args.type](fd, src_start_datetime=dt, name=name, src_id=id_, source=source)
-fout = open('littler.out', 'w')
-core = Core(adapter, fout)
-core.run()
+
+
+def run():
+    args = lrparser.parse_args()
+    fd = iopen(args.file, encoding=args.encoding)
+    id_, source, name, dt = _compose_meta_data(fd, args.id, args.source, args.name, args.date_time_string)
+    adapter = adapters[args.type](fd, src_start_datetime=dt, name=name, src_id=id_, source=source)
+    fout = open(args.outfile, 'w')
+    run_core(adapter, fout)
