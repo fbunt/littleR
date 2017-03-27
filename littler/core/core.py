@@ -7,10 +7,10 @@ class LittleRError(Exception):
 
 def run_core(adapter, fdout):
     """Write all levels from the source to the output in LITTLE_R format"""
-    fmtr = LittleRFormatter()
     if adapter.count <= 0:
         raise LittleRError('No data found. Level count: ' + str(adapter.count))
 
+    fmtr = LittleRFormatter()
     curlv = adapter.getlevel(0)
     _handle_next_level(curlv, None, fmtr)
     lastlv = curlv
