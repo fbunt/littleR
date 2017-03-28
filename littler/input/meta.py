@@ -21,11 +21,17 @@ def parse_meta_data(fd, default_id=None, default_source=None,
     """Parse the meta information for the data from the file
 
     If the defaults are specified, they will override the corresponding
-    values in the files header.
+    values in the files header. If all of the defaults are specified,
+    the file will not be read from and the defaults will be returned.
     """
+
+    defaults = [default_id, default_source, default_name, default_datetime]
+    if None not in defaults:
+        return defaults
+
     line = fd.readline()
     if not line.strip() == '---':
-        raise MetaDataParsingError('Could not find meta data')
+        raise MetaDataParsingError('Could not find meta data header')
 
     lines = line
     for line in fd:
@@ -35,7 +41,7 @@ def parse_meta_data(fd, default_id=None, default_source=None,
     try:
         data = yaml.load(lines, Loader=yaml.BaseLoader)
     except yaml.YAMLError:
-        raise MetaDataParsingError('Failed while attempting to parse meta data')
+        raise MetaDataParsingError('Failed while attempting to parse meta data header')
 
     try:
         id_ = default_id if default_id is not None else data[_ID_KEY]
@@ -49,7 +55,7 @@ def parse_meta_data(fd, default_id=None, default_source=None,
     except KeyError:
         raise MetaDataParsingError('Invalid header title(s)')
     if default_name is None:
-        name = name = os.path.splitext(os.path.basename(fd.name))[0]
+        name = os.path.splitext(os.path.basename(fd.name))[0]
     else:
         name = default_name
     return id_, source, name, dt
