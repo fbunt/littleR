@@ -14,6 +14,7 @@ def _compose_meta_data(fd, user_id, user_source, user_name, user_datetime):
 
 
 def run():
+    """Convert the input data file to LITTLE_R output."""
     args = get_parser().parse_args()
     fd = iopen(args.file, encoding=args.encoding)
     id_, source, name, dt = _compose_meta_data(fd, args.id, args.source, args.name, args.date_time_string)
