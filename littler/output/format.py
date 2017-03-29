@@ -4,7 +4,7 @@ from littler.level import Level, DEFAULT_FLOAT, DEFAULT_INT
 # http://www2.mmm.ucar.edu/wrf/users/wrfda/OnlineTutorial/Help/littler.html
 
 
-class LittleRFormatter:
+class LittleRFormatter(object):
     """A class for writing data to a file using the LittleR format.
 
     LittleR documentation can be found here: http://www2.mmm.ucar.edu/wrf/users/wrfda/OnlineTutorial/Help/littler.html
@@ -66,7 +66,7 @@ _END_RECORD_VALUE = -777777.0
 _TAIL_FMT_STR = '{:>7d}'*3
 
 
-class _Report:
+class _Report(object):
     """
     Report Structure:
         * Header line
@@ -135,7 +135,7 @@ _HEADER_FMT_STR = (
 )
 
 
-class _Header:
+class _Header(object):
     def __init__(self, level, valid_fields):
         self.lv = level
         self.valid_fields = valid_fields
@@ -143,19 +143,18 @@ class _Header:
     def __str__(self):
         lv = self.lv
         # See above for fields
-        return _HEADER_FMT_STR.format(
-            lv.lat, lv.lon,
-            lv.id[:40], lv.name[:40], lv.platform[:40], lv.source[:40],
-            lv.alt,
-            self.valid_fields, DEFAULT_INT, DEFAULT_INT, lv.seq_num, DEFAULT_INT,
-            _b_to_str(lv.is_sounding), _b_to_str(lv.bogus), _b_to_str(False),
-            DEFAULT_INT, DEFAULT_INT,
-            lv.date[:40],
-            lv.slp[0], 0,
-            *([DEFAULT_FLOAT, 0]*3),
-            lv.sfc_pres[0], 0,
-            *([DEFAULT_FLOAT, 0]*8)
-        )
+        args = [lv.lat, lv.lon]
+        args.extend([lv.id[:40], lv.name[:40], lv.platform[:40], lv.source[:40]])
+        args.append(lv.alt)
+        args.extend([self.valid_fields, DEFAULT_INT, DEFAULT_INT, lv.seq_num, DEFAULT_INT])
+        args.extend([_b_to_str(lv.is_sounding), _b_to_str(lv.bogus), _b_to_str(False)])
+        args.extend([DEFAULT_INT, DEFAULT_INT])
+        args.append(lv.date[:40])
+        args.extend([lv.slp[0], 0])
+        args.extend([DEFAULT_FLOAT, 0]*3)
+        args.extend([lv.sfc_pres[0], 0])
+        args.extend([DEFAULT_FLOAT, 0]*8)
+        return _HEADER_FMT_STR.format(*args)
 
 
 def _b_to_str(b):
@@ -170,19 +169,21 @@ def _b_to_str(b):
 _RECORD_FMT_STR = '{:13.5F}{:7d}'*10
 
 
-class _Record:
+class _Record(object):
     def __init__(self, level):
         self.lv = level
 
     def __str__(self):
         lv = self.lv
-        return _RECORD_FMT_STR.format(*lv.pres,
-                                      *lv.height,
-                                      *lv.temp,
-                                      *lv.dewpoint,
-                                      *lv.windspd,
-                                      *lv.winddir,
-                                      *lv.windu,
-                                      *lv.windv,
-                                      *lv.rh,
-                                      *lv.thickness)
+        args = []
+        args.extend(lv.pres)
+        args.extend(lv.height)
+        args.extend(lv.temp)
+        args.extend(lv.dewpoint)
+        args.extend(lv.windspd)
+        args.extend(lv.winddir)
+        args.extend(lv.windu)
+        args.extend(lv.windv)
+        args.extend(lv.rh)
+        args.extend(lv.thickness)
+        return _RECORD_FMT_STR.format(*args)

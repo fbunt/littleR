@@ -1,4 +1,4 @@
-class InputAdapter:
+class InputAdapter(object):
     """Base adapter class that wraps an input source
 
     Handles the source's specifics and exposes the source's data.

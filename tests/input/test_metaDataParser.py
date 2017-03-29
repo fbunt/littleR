@@ -1,9 +1,8 @@
 from unittest import TestCase
-from io import StringIO
 
 from littler.input import parse_meta_data, MetaDataParsingError
 
-from tests.utils import get_data_filename
+from tests.utils import get_data_filename, MyStringIO
 
 
 # Header examples with missing fields
@@ -31,7 +30,7 @@ class TestMetaDataParser(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.fd = open(get_data_filename('02032017SUAT_UAVflight_MREDI_19.48.02.txt'), encoding='latin-1')
+        cls.fd = open(get_data_filename('02032017SUAT_UAVflight_MREDI_19.48.02.txt'))
 
     @classmethod
     def tearDownClass(cls):
@@ -63,15 +62,15 @@ class TestMetaDataParser(TestCase):
         self.assertEqual('Flight Information:\n', line)
 
     def test_parse_no_header(self):
-        noheadfd = open(get_data_filename('GrawProfile_7_14_SLU.txt'), encoding='latin-1')
+        noheadfd = open(get_data_filename('GrawProfile_7_14_SLU.txt'))
         self.assertRaises(MetaDataParsingError, parse_meta_data, noheadfd)
         noheadfd.close()
 
     def test_parse_bad_header(self):
         for h in bad_headers_missing:
-            with StringIO(h) as fd:
+            with MyStringIO(h) as fd:
                 self.assertRaises(MetaDataParsingError, parse_meta_data, fd)
 
         for h in bad_headers_invalid_fields:
-            with StringIO(h) as fd:
+            with MyStringIO(h) as fd:
                 self.assertRaises(MetaDataParsingError, parse_meta_data, fd)

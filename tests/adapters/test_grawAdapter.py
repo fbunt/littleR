@@ -15,7 +15,7 @@ class TestGrawAdapter(TestCase):
     @classmethod
     def setUpClass(cls):
         fname = get_data_filename('GrawProfile_7_14_SLU.txt')
-        with open(fname, encoding='latin-1') as fd:
+        with open(fname) as fd:
             cls.now = datetime.datetime.today()
             cls.adapter = GrawAdapter(fd, cls.now)
 

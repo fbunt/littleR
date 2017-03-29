@@ -2,7 +2,7 @@ DEFAULT_FLOAT = -888888.0
 DEFAULT_INT = -888888
 
 
-class Level:
+class Level(object):
     """Container class for passing LITTLE_R level data"""
 
     def __init__(self):

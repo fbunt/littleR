@@ -40,7 +40,7 @@ class GrawAdapter(InputAdapter):
         :param src: The data source file or file name. Ownership is NOT assumed for open file objects.
         :param src_start_datetime: datetime.datetime The start data and time of the measurements
         """
-        super().__init__()
+        super(GrawAdapter, self).__init__()
         self.levels = []
         self._start_date = src_start_datetime
         self._src_name = name
@@ -128,9 +128,12 @@ _DATA_INDICATOR = 'Profile Data:'
 
 
 def _remove_graw_header(fd):
-    for line in fd:
+    while True:
+        line = fd.readline()
         if line.startswith(_DATA_INDICATOR):
             return True
+        if not line:
+            break
     return False
 
 

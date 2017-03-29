@@ -34,9 +34,12 @@ def parse_meta_data(fd, default_id=None, default_source=None,
         raise MetaDataParsingError('Could not find meta data header')
 
     lines = line
-    for line in fd:
+    # Use while loop instead of for in case read*() methods are called on
+    # this file object later. 'for line in fd:' breaks those methods.
+    while True:
+        line = fd.readline()
         lines += line
-        if line.startswith('...'):
+        if line.startswith('...') or not line:
             break
     try:
         data = yaml.load(lines, Loader=yaml.BaseLoader)
