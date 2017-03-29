@@ -1,4 +1,4 @@
-from frontend import run
+from littler.frontend import run
 
 
 __all__ = ['run']
