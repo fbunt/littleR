@@ -35,17 +35,14 @@ class GrawParsingError(LittleRError):
 
 
 class GrawAdapter(InputAdapter):
-    def __init__(self, src, src_start_datetime, name='', src_id='', source=''):
+    def __init__(self):
         """
         :param src: The data source file or file name. Ownership is NOT assumed for open file objects.
         :param src_start_datetime: datetime.datetime The start data and time of the measurements
         """
         super(GrawAdapter, self).__init__()
-        self.levels = []
-        self._start_date = src_start_datetime
-        self._src_name = name
-        self._src_id = src_id
-        self._src_source = source
+
+    def parse_data_source(self, src):
         self._parse(src)
 
     def getlevel(self, pos):

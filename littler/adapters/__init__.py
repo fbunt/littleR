@@ -1,5 +1,2 @@
 from littler.adapters.grawadapter import GrawAdapter
-
-
-adapters = {}
-adapters['graw'] = GrawAdapter
+from littler.adapters.factory import adapters_map, get_adapter

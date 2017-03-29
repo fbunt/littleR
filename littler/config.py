@@ -3,7 +3,7 @@ import datetime
 import os
 import re
 
-from littler.adapters import adapters
+from littler.adapters import adapters_map
 from littler.core import LittleRError
 
 
@@ -60,7 +60,8 @@ def _validate_file_name(fname):
 
 
 def _validate_type(t):
-    if t in adapters:
+    t = t.lower()
+    if t in adapters_map:
         return t
     raise ConfigError('Unknown data type: ' + t)
 
