@@ -20,4 +20,7 @@ def run():
         meta = _compose_meta_data(data_fd, args.id, args.source, args.name, args.date_time_string)
         adapter = get_adapter(args.type, data_fd, *meta)
     fout = open(args.outfile, 'w')
-    run_core(adapter, fout)
+    return run_core(adapter, fout)
+
+
+main = run

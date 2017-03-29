@@ -20,6 +20,7 @@ def run_core(adapter, fdout):
         lastlv = curlv
     fdout.write(fmtr.format(True))
     fdout.close()
+    return 0
 
 
 def _handle_next_level(cur, last, formatter):
