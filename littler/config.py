@@ -21,10 +21,10 @@ def get_parser():
         help='The file to be converted to LITTLE_R',
         type=_validate_file_name)
     # TODO: let user supply adapter
-    lrparser.add_argument(
-        '--encoding',
-        help='Special encoding to use for file',
-        default='utf-8')
+    # lrparser.add_argument(
+    #     '--encoding',
+    #     help='Special encoding to use for file',
+    #     default='utf-8')
     lrparser.add_argument(
         '-n', '--name',
         help='Name of the data set')
