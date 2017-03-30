@@ -1,9 +1,9 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='littler',
     version='0.1',
-    packages=['littler'],
+    packages=find_packages(),
     package_dir={'littler': 'littler'},
     url='',
     license='',
