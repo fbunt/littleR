@@ -33,7 +33,7 @@ def get_parser():
         help='ID of the data set')
     lrparser.add_argument(
         '-d', '--date_time_string',
-        help='String representing the date and (start) time of the data. Has '
+        help='String representing the UTC date and (start) time of the data. Has '
              'the form \'MMDDYYYYhhmmss\'',
         type=_parse_datestr)
     lrparser.add_argument(
