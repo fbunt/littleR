@@ -81,10 +81,11 @@ def _parse_datestr(s):
     if not m:
         raise ConfigError('Invalid date-time string: ' + s)
     from littler.input.meta import UTC
-    month = m.group(1)
-    day = m.group(2)
-    year = m.group(3)
-    hour = m.group(4)
-    minute = m.group(5)
-    sec = m.group(6)
+    vals = [int(m.group(i)) for i in range(0, 7)]
+    month = vals[1]
+    day = vals[2]
+    year = vals[3]
+    hour = vals[4]
+    minute = vals[5]
+    sec = vals[6]
     return datetime.datetime(year, month, day, hour, minute, sec, tzinfo=UTC())
