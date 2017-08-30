@@ -23,6 +23,7 @@ def run():
             meta = _compose_meta_data(data_fd, args.id, args.source, args.name, args.date_time_string)
         except MetaDataParsingError:
             cli_out.info('Failed while gathering meta data. Exiting...')
+            return 1
         adapter = get_adapter(args.type, data_fd, *meta)
     fout = open(args.outfile, 'w')
     try:
