@@ -1,7 +1,11 @@
-from littler.output import LittleRFormatter
+from littler.output import LittleRFormatter, cli_out
 
 
 class LittleRError(Exception):
+    pass
+
+
+class NoDataError(LittleRError):
     pass
 
 
@@ -9,7 +13,8 @@ def run_core(adapter, fdout):
     """Write all levels from the source to the output in LITTLE_R format"""
     if adapter.count <= 0:
         fdout.close()
-        raise LittleRError('No data found. Level count: ' + str(adapter.count))
+        cli_out.error('No data found. Level count: ' + str(adapter.count))
+        raise NoDataError('No data found. Level count: ' + str(adapter.count))
 
     fmtr = LittleRFormatter()
     curlv = adapter.getlevel(0)
