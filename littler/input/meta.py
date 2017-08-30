@@ -4,6 +4,7 @@ import re
 import yaml
 
 from littler.core import LittleRError
+from littler.output import cli_out
 
 
 class MetaDataParsingError(LittleRError):
@@ -31,7 +32,8 @@ def parse_meta_data(fd, default_id=None, default_source=None,
 
     line = fd.readline()
     if not line.strip() == '---':
-        raise MetaDataParsingError('Could not find meta data header')
+        cli_out.error('One or more meta data values were not specified and no header was found in the data file.')
+        raise MetaDataParsingError('Could not find start of meta data header')
 
     lines = line
     # Use while loop instead of for in case read*() methods are called on
@@ -44,6 +46,7 @@ def parse_meta_data(fd, default_id=None, default_source=None,
     try:
         data = yaml.load(lines, Loader=yaml.BaseLoader)
     except yaml.YAMLError:
+        cli_out.error('Failed while parsing data header.')
         raise MetaDataParsingError('Failed while attempting to parse meta data header')
 
     try:
@@ -56,6 +59,7 @@ def parse_meta_data(fd, default_id=None, default_source=None,
         else:
             dt = default_datetime
     except KeyError:
+        cli_out.error('Invalid header title(s).')
         raise MetaDataParsingError('Invalid header title(s)')
     if default_name is None:
         name = os.path.splitext(os.path.basename(fd.name))[0]
@@ -76,10 +80,12 @@ def _parse_date(datestr):
         if mat:
             match = mat
         else:
+            cli_out.error('Could not parse date: ' + repr(datestr))
             raise MetaDataParsingError('Could not parse date: ' + repr(datestr))
     try:
         return datetime.date(int(match.group(3)), int(match.group(1)), int(match.group(2)))
     except ValueError:
+        cli_out.error('Could not parse date: ' + repr(datestr))
         raise MetaDataParsingError('Could not parse date: ' + repr(datestr))
 
 
@@ -88,6 +94,7 @@ def _parse_time(timestr):
     try:
         return datetime.time(int(h), int(m), int(s), 0, UTC())
     except ValueError:
+        cli_out.error('Could not parse time: ' + repr(timestr))
         raise MetaDataParsingError('Could not parse time: ' + repr(timestr))
 
 
