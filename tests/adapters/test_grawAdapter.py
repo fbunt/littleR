@@ -31,7 +31,7 @@ class TestGrawAdapter(TestCase):
                         'All elements in adapter.levels must be a Level')
 
     def test_time_string(self):
-        test_str = self.now.strftime('%Y%M%d%H%m%S')
+        test_str = self.now.strftime('%Y%m%d%H%M%S')
         self.assertEqual(self.adapter.getlevel(0).date, test_str, 'Data string must match expected format')
 
     def test_valid_fields(self):
